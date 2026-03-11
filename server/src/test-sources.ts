@@ -5,10 +5,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { searchNVD } from './services/nvd.js';
 import { searchGitHubAdvisories } from './services/githubAdvisory.js';
-import { searchCIRCL } from './services/cveOrg.js';
-import { searchSecurityBlogs } from './services/securityBlogs.js';
 import { searchAllVulnerabilitySources } from './services/vulnerabilitySearch.js';
 
 const TEST_QUERY = 'react';
@@ -40,10 +37,7 @@ async function main() {
 
   const results = [];
 
-  results.push(await testSource('NVD', () => searchNVD(TEST_QUERY)));
   results.push(await testSource('GitHub Advisory', () => searchGitHubAdvisories(TEST_QUERY)));
-  results.push(await testSource('CIRCL', () => searchCIRCL(TEST_QUERY)));
-  results.push(await testSource('Security Blogs', () => searchSecurityBlogs(TEST_QUERY)));
 
   console.log(`\n${'='.repeat(50)}`);
   console.log('Aggregated Search');
