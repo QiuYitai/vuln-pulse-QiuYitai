@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  server:
+    build: ./server
+    container_name: vuln-pulse-server
+    restart: unless-stopped
+    volumes:
+      - vuln-data:/app/data
+      - ./server/.env:/app/.env:ro
+    environment:
+      - DATABASE_URL=file:/app/data/vuln-pulse.db
+      - PORT=3001
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  client:
+    build: ./client
+    container_name: vuln-pulse-client
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      server:
+        condition: service_healthy
+
+volumes:
+  vuln-data:
